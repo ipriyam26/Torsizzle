@@ -1,0 +1,28 @@
+{
+  "name": "mp4-box-encoding",
+  "version": "1.4.1",
+  "description": "mp4 box parser/unparser using abstract-encoding",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jhiesey/mp4-box-encoding.git"
+  },
+  "scripts": {
+    "test": "standard"
+  },
+  "keywords": [
+    "mp4",
+    "box",
+    "parse",
+    "unparse"
+  ],
+  "author": "John Hiesey",
+  "license": "MIT",
+  "dependencies": {
+    "uint64be": "^2.0.2"
+  },
+  "devDependencies": {
+    "standard": "^11.0.1",
+    "tape": "^4.9.1"
+  }
+}

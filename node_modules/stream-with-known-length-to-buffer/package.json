@@ -1,0 +1,57 @@
+{
+  "name": "stream-with-known-length-to-buffer",
+  "description": "Convert a Readable Stream with a known length into a Buffer",
+  "version": "1.0.4",
+  "author": {
+    "name": "Feross Aboukhadijeh",
+    "email": "feross@feross.org",
+    "url": "https://feross.org"
+  },
+  "bugs": {
+    "url": "https://github.com/feross/stream-with-known-length-to-buffer/issues"
+  },
+  "dependencies": {
+    "once": "^1.4.0"
+  },
+  "devDependencies": {
+    "airtap": "^3.0.0",
+    "standard": "*",
+    "string-to-stream": "^3.0.1",
+    "tape": "^5.0.1"
+  },
+  "homepage": "https://github.com/feross/stream-with-known-length-to-buffer",
+  "keywords": [
+    "stream",
+    "buffer",
+    "convert stream to buffer",
+    "convert",
+    "known length",
+    "length"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/feross/stream-with-known-length-to-buffer.git"
+  },
+  "scripts": {
+    "test": "standard && npm run test-node && npm run test-browser",
+    "test-node": "tape test/*.js",
+    "test-browser": "airtap -- test/*.js",
+    "test-browser-local": "airtap --local -- test/*.js"
+  },
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/feross"
+    },
+    {
+      "type": "patreon",
+      "url": "https://www.patreon.com/feross"
+    },
+    {
+      "type": "consulting",
+      "url": "https://feross.org/support"
+    }
+  ]
+}

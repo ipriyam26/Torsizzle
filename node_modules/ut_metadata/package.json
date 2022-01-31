@@ -1,0 +1,60 @@
+{
+  "name": "ut_metadata",
+  "description": "Extension for Peers to Send Metadata Files (BEP 9)",
+  "version": "3.5.2",
+  "author": {
+    "name": "WebTorrent LLC",
+    "email": "feross@webtorrent.io",
+    "url": "https://webtorrent.io"
+  },
+  "bugs": {
+    "url": "https://github.com/webtorrent/ut_metadata/issues"
+  },
+  "dependencies": {
+    "bencode": "^2.0.1",
+    "bitfield": "^4.0.0",
+    "debug": "^4.2.0",
+    "simple-sha1": "^3.0.1"
+  },
+  "devDependencies": {
+    "bittorrent-protocol": "^3.1.2",
+    "brfs": "^2.0.2",
+    "standard": "*",
+    "tape": "^5.0.1",
+    "webtorrent-fixtures": "^1.7.3"
+  },
+  "keywords": [
+    "Extension for Peers to Send Metadata Files",
+    "bep",
+    "bep 9",
+    "bep_0009",
+    "bittorrent",
+    "metadata",
+    "p2p",
+    "torrent",
+    "ut_metadata"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/webtorrent/ut_metadata.git"
+  },
+  "scripts": {
+    "test": "standard && tape test/*.js"
+  },
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/feross"
+    },
+    {
+      "type": "patreon",
+      "url": "https://www.patreon.com/feross"
+    },
+    {
+      "type": "consulting",
+      "url": "https://feross.org/support"
+    }
+  ]
+}

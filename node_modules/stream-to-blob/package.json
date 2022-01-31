@@ -1,0 +1,59 @@
+{
+  "name": "stream-to-blob",
+  "description": "Convert a Readable Stream to a Blob",
+  "version": "2.0.1",
+  "author": {
+    "name": "Feross Aboukhadijeh",
+    "email": "feross@feross.org",
+    "url": "https://feross.org"
+  },
+  "bugs": {
+    "url": "https://github.com/feross/stream-to-blob/issues"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "airtap": "^3.0.0",
+    "blob-to-buffer": "^1.2.6",
+    "standard": "*",
+    "string-to-stream": "^3.0.0",
+    "tape": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=8"
+  },
+  "homepage": "https://github.com/feross/stream-to-blob",
+  "keywords": [
+    "blob",
+    "buffer",
+    "convert",
+    "convert stream to blob",
+    "length",
+    "name",
+    "stream"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/feross/stream-to-blob.git"
+  },
+  "scripts": {
+    "test": "standard && npm run test-browser",
+    "test-browser": "airtap -- test/*.js",
+    "test-browser-local": "airtap --local -- test/*.js"
+  },
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/feross"
+    },
+    {
+      "type": "patreon",
+      "url": "https://www.patreon.com/feross"
+    },
+    {
+      "type": "consulting",
+      "url": "https://feross.org/support"
+    }
+  ]
+}
