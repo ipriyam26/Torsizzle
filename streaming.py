@@ -40,7 +40,7 @@ headers = {
 r = requests.get('https://apibay.org/q.php',params=paylode,headers=headers)
 status = r.status_code
 t =   r.json() if status==200 else None
-if(t!=None):
+if(t!=None and t>0):
     i=1
     selected = 0
     for search in t:
