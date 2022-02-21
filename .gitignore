@@ -1,0 +1,5 @@
+/venv
+/__pycache__
+/req.txt
+/setup.pyc
+/.DS_Store
