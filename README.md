@@ -3,8 +3,7 @@ Use
 
 
 Run setup.py to install whatever is needed for mac and windows users
-
-`python setup.py`
+>python setup.py
 
 ## Movies
 Dependencies
