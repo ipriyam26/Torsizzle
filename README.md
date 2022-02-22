@@ -26,10 +26,13 @@ PS: You can download anything torrent lets you
 Dependencies
 
 `1. MPV`
+> https://mpv.io/installation/
 
 `2. NPM`
+> https://nodejs.org/en/download/
 
-`3. Webtorrent-cli`: > npm i webtorrent-cli
+`3. Webtorrent-cli`
+> npm i webtorrent-cli
 
 
 ### Packages
