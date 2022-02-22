@@ -31,7 +31,6 @@ class Torrent:
             options.append("Search Again")
             terminal_menu = TerminalMenu(options,title=menu,clear_screen=True,menu_highlight_style=("bg_red", "fg_yellow")) 
             menu_entry_index = terminal_menu.show()
-            # print(menu_entry_index)
 
             if(options[menu_entry_index]=="Exit"):
                 exit()
@@ -57,7 +56,7 @@ class Torrent:
             while i<end:
                 
                 size = float("{:.2f}".format(float(t[i]['size'])/1000000000.0))
-                options.append(f" {t[i]['name']}  [{size}GB]")
+                options.append(f"{i+1}. {t[i]['name']}  [{size}GB]")
                 i+=1
             if(start>=10):
                 options.append('Go to Last Page')
@@ -66,13 +65,11 @@ class Torrent:
             options.append("Exit") 
             terminal_menu = TerminalMenu(options,title=menu,clear_screen=True,menu_highlight_style=("bg_red", "fg_yellow")) 
             menu_entry_index = terminal_menu.show()
-            # print(menu_entry_index)
             
             
             if(options[menu_entry_index]=="Go to Next Page"):
                 self.top_parser(r,end,end+10,menu)
             elif(options[menu_entry_index]=="Go to Last Page"):
-                # print(f"start = {start-10} end = {start}")
                 self.top_parser(r,start-10,start,menu)
             elif(options[menu_entry_index]=="Exit"):
                 exit()
@@ -102,7 +99,7 @@ class Torrent:
         
         
 
-            
+           #/Users/ipriyam26/Programing/Movies/torsizzle 
         
     def seach_stream(self):
         Movie = input("What would you like to watch today? ")
