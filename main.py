@@ -1,28 +1,21 @@
+
+
 from os import path
-import setup
+from simple_term_menu import TerminalMenu
 import streaming
 
+
 def start_menu():
-    print("""
-1. Search 
-2. Top 100 Movies
-3. Top 100 HD Movies
-4. Top 100 Series
-5. Top Audiobooks
-6. Exit
-    """)
-    while True:
-        selected = input("\nEnter Number to select : ")
-        if(selected.isnumeric):
-            if( int(selected)<7):
-                break
-        print("Please Enter Correct value")
-    return int(selected)
+    
+    options = ['[1] Search','[2] Top 100 Movies','[3] Top 100 HD Movies','[4] Top 100 Series','[5] Top Audiobooks','[6] Exit']
+    main_menu_cursor_style = ("fg_red", "bold")
+    terminal_menu = TerminalMenu(options,clear_screen=True,title="Menu",menu_highlight_style=("bg_red", "fg_yellow"))
+    menu_entry_index = terminal_menu.show()
+    print(menu_entry_index)
+    return int(menu_entry_index)+1
 
 
 
-if(not path.exists("req.txt")) :
-    setup.setup()
 
 selection = start_menu()
 
@@ -42,6 +35,6 @@ else:
     exit()
     
     
-    
+
 
     

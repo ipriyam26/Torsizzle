@@ -5,6 +5,7 @@ from urllib import response
 import requests
 import os
 from os import path
+from simple_term_menu import TerminalMenu
 
 
 
@@ -15,81 +16,93 @@ class Torrent:
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0'
             } 
 
-    def parser(self,r):
-        
-        status = r.status_code
-        t =   r.json() if status==200 else None
+    def parser(self,r,menu):
+        t =   r.json() if r.status_code==200 else None
         if(t!=None  ):
             i=1
             selected = 0
-            for search in t:
-                if( int(search['seeders']) > 20):
-                    print('[{}] {} ({})'.format(i,search['name'],search['seeders']))
-                    i=i+1
-            
-            while True:
-                selected = input("\nEnter Number to select : ")
-                if(selected.isnumeric):
-                    if( int(selected)<i):
-                        break
-                print("Please Enter Correct value")
+            options =[]
+            while i<len(t): 
+                size = float("{:.2f}".format(float(t[i]['size'])/1000000000.0))
+                if int(t[i]['seeders'])>10:
+                    options.append(f" {t[i]['name']}  [{size}GB]")
+                i+=1
+            if len(options)==0:
+                print("Sorry no results found......")
+            options.append("Exit") 
+            options.append("Search Again")
+            terminal_menu = TerminalMenu(options,title=menu,clear_screen=True,menu_highlight_style=("bg_red", "fg_yellow")) 
+            menu_entry_index = terminal_menu.show()
+            # print(menu_entry_index)
+
+            if(options[menu_entry_index]=="Exit"):
+                exit()
+            elif(options[menu_entry_index]=="Search Again"):
+                self.seach_stream()
+            else:
+                self.stream(menu_entry_index,t)
                 
 
-            self.stream(int(selected)-1,t)
+            # self.stream(int(selected)-1,t)
 
         else:
             print("Sorry Cannot find what you are searching for :(")
     
     
-    def top_parser(self,r,start,end):
+    def top_parser(self,r,start,end,menu):
         
         status = r.status_code
         t =   r.json() if status==200 else None
         if(t!=None):
             i=start
-            selected=0
+
+            options =[]
             while i<end:
+                
                 size = float("{:.2f}".format(float(t[i]['size'])/1000000000.0))
-                print(f"[{i+1}] {t[i]['name']} ({t[i]['seeders']}) [{size}GB]")
-                # print(f'[{i+1}] {t[i]['name']}  [{float(t[i]['size'])/1000000000.0}GB]')
+                options.append(f" {t[i]['name']}  [{size}GB]")
                 i+=1
-                
-            while True:
-                selected = input(
-f"""
--> Enter Number to select [{start+1} - {end}]
--> Press n to go to next page
--> Press p to go to previous page
--> Enter: """)
-                
-                if( selected=='n' or selected=='p'):
-                    break
-                elif(selected.isnumeric):
-                    if( int(selected)<=i ):
-                        break
-                print("Please Enter Correct value")   
-            try:
-                if selected=='n' and end<100:
-                    self.top_parser(r,end,end+20)
-                elif selected =='p' and start>=20:
-                    self.top_parser(r,start-20,start)    
-                elif(selected.isnumeric):
-                    self.stream(int(selected)-1,t)
-                else: 
-                    print("Page does not exists....")
-                    print("Sending you back to home screen...")
-                    self.top_parser(r,0,20)
-            except:
-                print("There was an error please pick again....")
-                self.top_parser(r,start,end)        
+            if(start>=10):
+                options.append('Go to Last Page')
+            if(end<100):
+                options.append("Go to Next Page") 
+            options.append("Exit") 
+            terminal_menu = TerminalMenu(options,title=menu,clear_screen=True,menu_highlight_style=("bg_red", "fg_yellow")) 
+            menu_entry_index = terminal_menu.show()
+            # print(menu_entry_index)
             
-                 
+            
+            if(options[menu_entry_index]=="Go to Next Page"):
+                self.top_parser(r,end,end+10,menu)
+            elif(options[menu_entry_index]=="Go to Last Page"):
+                # print(f"start = {start-10} end = {start}")
+                self.top_parser(r,start-10,start,menu)
+            elif(options[menu_entry_index]=="Exit"):
+                exit()
+            else:
+                self.stream(menu_entry_index+start,t)
+            
+
+            
     
     
     def stream(self,select,t):
-        print("Playing {}......".format(t[select]['name']) )
-        com = 'webtorrent --mpv ' + t[select]['info_hash'] 
-        os.system(com)
+        options = ["Stream","Download","Exit"]
+        terminal_menu = TerminalMenu(options,title=f"{t[select]['name']}",clear_screen=True,menu_highlight_style=("bg_red", "fg_yellow"))
+        selected = terminal_menu.show()
+        if selected==0:
+            print("Playing {}......".format(t[select]['name']) )
+            com = 'webtorrent --mpv --quiet ' + t[select]['info_hash']
+            os.system(com) 
+        elif selected==1:
+            print("Downloading {}......".format(t[select]['name']) )
+            com = 'webtorrent ' + t[select]['info_hash'] 
+            os.system(com)
+        else:
+            exit()
+               
+
+        
         
 
             
@@ -98,25 +111,25 @@ f"""
         Movie = input("What would you like to watch today? ")
         paylode = {'q':Movie}
         r = requests.get('https://apibay.org/q.php',params=paylode,headers=self.headers)
-        self.parser(r)
+        self.parser(r,menu=Movie)
 
 
 
     def top_movies(self):
         response = requests.get('https://apibay.org/precompiled/data_top100_201.json',headers=self.headers)
-        self.top_parser(response,0,20)
+        self.top_parser(response,0,10,menu="Top 100 Movies")
         
     def top_series(self):
         response = requests.get('https://apibay.org/precompiled/data_top100_205.json',headers=self.headers)
-        self.top_parser(response,0,20)
+        self.top_parser(response,0,10,menu="Top 100 Series")
         
     def top_movies_HD(self):
         response = requests.get('https://apibay.org/precompiled/data_top100_207.json',headers=self.headers)
-        self.top_parser(response,0,20)    
+        self.top_parser(response,0,10,menu="Top 100 Movies HD")    
         
     def top_audiobooks(self):
         response = requests.get('https://apibay.org/precompiled/data_top100_102.json',headers=self.headers)
-        self.top_parser(response,0,20)
+        self.top_parser(response,0,10,menu="Top 100 Audiobooks")
                 
       
             
