@@ -1,8 +1,8 @@
-#Use
+# Use
 >python main.py
 
 
-#Run setup.py to install whatever is needed for mac and windows users
+# Run setup.py to install whatever is needed for mac and windows users
 >python setup.py
 
 #For linix users install these Dependencies
