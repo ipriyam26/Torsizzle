@@ -1,10 +1,8 @@
 #!./venv/bin/python
 # -*- coding: utf-8 -*-
 
-from urllib import response
 import requests
 import os
-from os import path
 from simple_term_menu import TerminalMenu
 
 
@@ -43,7 +41,6 @@ class Torrent:
                 self.stream(menu_entry_index,t)
                 
 
-            # self.stream(int(selected)-1,t)
 
         else:
             print("Sorry Cannot find what you are searching for :(")
