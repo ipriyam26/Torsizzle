@@ -7,11 +7,16 @@ PS: You can download anything torrent lets you
 ### Use
 >python main.py
 
+## Setup
+
+> git clone https://github.com/ipriyam26/Torsizzle.git && cd Torsizzle
 
 ### For mac and windows users
 >python setup.py
 
-### For linix users install these Dependencies
+### For linix users install these Dependencies then run
+>python setup.py
+
 
 ### Movies
 Dependencies
