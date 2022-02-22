@@ -25,7 +25,7 @@ def setup():
         os.system('brew install npm')
         os.system('npm i webtorrent-cli -g')
     
-    os.system('pip install -r requirements.txt')
+    os.system('pip install -r requirement.txt')
     with open('req.txt', 'w') as f:
         f.write('met') 
     
