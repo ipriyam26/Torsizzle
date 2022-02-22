@@ -29,7 +29,7 @@ Dependencies
 
 `2. NPM`
 
-`3. Webtorrent-cli`
+`3. Webtorrent-cli`: > npm i webtorrent-cli
 
 
 ### Packages
