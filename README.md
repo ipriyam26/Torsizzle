@@ -15,6 +15,11 @@ PS: You can download anything torrent lets you
 
 > git clone https://github.com/ipriyam26/Torsizzle.git && cd Torsizzle
 
+### For Windows users
+>pip install windows-curses
+>python setup.py
+
+
 ### For mac users
 >python setup.py
 
