@@ -9,7 +9,7 @@ Search, Browse, Stream, Download movies webseries audiobooks.... faster than eve
 PS: You can download anything torrent lets you
 
 ### Use
->python main.py
+>python3 main.py
 
 ## Setup
 
@@ -17,14 +17,15 @@ PS: You can download anything torrent lets you
 
 ### For Windows users
 >pip install windows-curses
->python setup.py
+
+>python3 setup.py
 
 
 ### For mac users
->python setup.py
+>python3 setup.py
 
 ### For linix users install these Dependencies then run
->python setup.py
+>python3 setup.py
 
 
 ### Movies
@@ -41,6 +42,8 @@ Dependencies
 
 
 ### Packages
-`1. simple_term_menu`
+`1. simple_term_menu` (for mac and linux)
 
 `2. requests` 
+
+`3. pick` (for windows only)
