@@ -16,6 +16,7 @@ def setup():
         os.system('scoop install nodejs')
         os.system('scoop install mpv')
         os.system('npm i webtorrent-cli')
+        os.system('pip install pick')
 
             
     if(platform.system()=='Darwin' and not path.exists("req.txt")) :
@@ -24,6 +25,7 @@ def setup():
         os.system('brew install mpv')
         os.system('brew install npm')
         os.system('npm i webtorrent-cli -g')
+        os.system('pip install simple-term-menu')
     
     os.system('pip install -r requirement.txt')
     with open('req.txt', 'w') as f:

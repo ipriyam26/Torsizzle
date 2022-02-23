@@ -3,7 +3,11 @@
 
 import requests
 import os
-from simple_term_menu import TerminalMenu
+import platform
+if platform.system()=='Windows':
+    from pick import pick
+else:
+    from simple_term_menu import TerminalMenu
 
 
 
@@ -13,6 +17,7 @@ class Torrent:
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0'
             } 
+        self.platform = platform.system()
 
     def parser(self,r,menu):
         t =   r.json() if r.status_code==200 else None
@@ -29,8 +34,12 @@ class Torrent:
                 print("Sorry no results found......")
             options.append("Exit") 
             options.append("Search Again")
-            terminal_menu = TerminalMenu(options,title=menu,clear_screen=True,menu_highlight_style=("bg_red", "fg_yellow")) 
-            menu_entry_index = terminal_menu.show()
+            
+            if self.platform == 'Windows':
+                option, menu_entry_index = pick(options, menu,indicator='>>')
+            else:
+                terminal_menu = TerminalMenu(options,title=menu,clear_screen=True,menu_highlight_style=("bg_red", "fg_yellow")) 
+                menu_entry_index = terminal_menu.show()
 
             if(options[menu_entry_index]=="Exit"):
                 exit()
@@ -62,9 +71,12 @@ class Torrent:
                 options.append('Go to Last Page')
             if(end<100):
                 options.append("Go to Next Page") 
-            options.append("Exit") 
-            terminal_menu = TerminalMenu(options,title=menu,clear_screen=True,menu_highlight_style=("bg_red", "fg_yellow")) 
-            menu_entry_index = terminal_menu.show()
+            options.append("Exit")
+            if self.platform == 'Windows':
+                option, menu_entry_index = pick(options, menu,indicator='>>')
+            else:
+                terminal_menu = TerminalMenu(options,title=menu,clear_screen=True,menu_highlight_style=("bg_red", "fg_yellow")) 
+                menu_entry_index = terminal_menu.show() 
             
             
             if(options[menu_entry_index]=="Go to Next Page"):
@@ -82,8 +94,12 @@ class Torrent:
     
     def stream(self,select,t):
         options = ["Stream","Download","Exit"]
-        terminal_menu = TerminalMenu(options,title=f"{t[select]['name']}",clear_screen=True,menu_highlight_style=("bg_red", "fg_yellow"))
-        selected = terminal_menu.show()
+        if self.platform == 'Windows':
+            option, selected = pick(options, f"{t[select]['name']}",indicator='>>')
+        else:
+            terminal_menu = TerminalMenu(options,title=f"{t[select]['name']}",clear_screen=True,menu_highlight_style=("bg_red", "fg_yellow"))
+            selected = terminal_menu.show()
+
         if selected==0:
             print("Playing {}......".format(t[select]['name']) )
             com = 'webtorrent --mpv --quiet ' + t[select]['info_hash']
