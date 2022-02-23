@@ -15,7 +15,7 @@ PS: You can download anything torrent lets you
 
 > git clone https://github.com/ipriyam26/Torsizzle.git && cd Torsizzle
 
-### For mac and windows users
+### For mac users
 >python setup.py
 
 ### For linix users install these Dependencies then run
