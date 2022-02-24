@@ -13,8 +13,10 @@ class Torrent:
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0'
             } 
+        self.menu = " "
 
-    def parser(self,r,menu):
+
+    def parser(self,r):
         t =   r.json() if r.status_code==200 else None
         if(t!=None  ):
             i=1
@@ -29,8 +31,8 @@ class Torrent:
                 print("Sorry no results found......")
             options.append("Exit") 
             options.append("Search Again")
-            terminal_menu = TerminalMenu(options,title=menu,clear_screen=True,menu_highlight_style=("bg_red", "fg_yellow")) 
-            menu_entry_index = terminal_menu.show()
+            
+            menu_entry_index = self.display_menu(options) 
 
             if(options[menu_entry_index]=="Exit"):
                 exit()
@@ -44,8 +46,11 @@ class Torrent:
         else:
             print("Sorry Cannot find what you are searching for :(")
     
+    def display_menu(self,options):
+        terminal_menu = TerminalMenu(options,title=self.menu,clear_screen=True,menu_highlight_style=("bg_red", "fg_yellow")) 
+        return terminal_menu.show()
     
-    def top_parser(self,r,start,end,menu):
+    def top_parser(self,r,start,end):
         
         status = r.status_code
         t =   r.json() if status==200 else None
@@ -63,67 +68,54 @@ class Torrent:
             if(end<100):
                 options.append("Go to Next Page") 
             options.append("Exit") 
-            terminal_menu = TerminalMenu(options,title=menu,clear_screen=True,menu_highlight_style=("bg_red", "fg_yellow")) 
-            menu_entry_index = terminal_menu.show()
-            
-            
+            menu_entry_index = self.display_menu(options) 
             if(options[menu_entry_index]=="Go to Next Page"):
-                self.top_parser(r,end,end+10,menu)
+                self.top_parser(r,end,end+10)
             elif(options[menu_entry_index]=="Go to Last Page"):
-                self.top_parser(r,start-10,start,menu)
+                self.top_parser(r,start-10,start)
             elif(options[menu_entry_index]=="Exit"):
                 exit()
             else:
                 self.stream(menu_entry_index+start,t)
-            
-
-            
     
     
     def stream(self,select,t):
         options = ["Stream","Download","Exit"]
-        terminal_menu = TerminalMenu(options,title=f"{t[select]['name']}",clear_screen=True,menu_highlight_style=("bg_red", "fg_yellow"))
-        selected = terminal_menu.show()
-        if selected==0:
+        menu_entry_index = self.display_menu(options)
+        
+        if menu_entry_index==0:
             print("Playing {}......".format(t[select]['name']) )
             com = 'webtorrent --mpv --quiet ' + t[select]['info_hash']
             os.system(com) 
-        elif selected==1:
+        elif menu_entry_index==1:
             print("Downloading {}......".format(t[select]['name']) )
             com = 'webtorrent ' + t[select]['info_hash'] 
             os.system(com)
         else:
             exit()
-               
-
-        
-        
-
-           #/Users/ipriyam26/Programing/Movies/torsizzle 
         
     def seach_stream(self):
         Movie = input("What would you like to watch today? ")
         paylode = {'q':Movie}
         r = requests.get('https://apibay.org/q.php',params=paylode,headers=self.headers)
-        self.parser(r,menu=Movie)
-
-
+        self.menu = "Search Results for {}".format(Movie)
+        self.parser(r)
 
     def top_movies(self):
         response = requests.get('https://apibay.org/precompiled/data_top100_201.json',headers=self.headers)
-        self.top_parser(response,0,10,menu="Top 100 Movies")
+        self.top_parser(response,0,10)
         
     def top_series(self):
         response = requests.get('https://apibay.org/precompiled/data_top100_205.json',headers=self.headers)
-        self.top_parser(response,0,10,menu="Top 100 Series")
+        self.top_parser(response,0,10)
         
     def top_movies_HD(self):
         response = requests.get('https://apibay.org/precompiled/data_top100_207.json',headers=self.headers)
-        self.top_parser(response,0,10,menu="Top 100 Movies HD")    
+        self.top_parser(response,0,10)    
         
     def top_audiobooks(self):
         response = requests.get('https://apibay.org/precompiled/data_top100_102.json',headers=self.headers)
-        self.top_parser(response,0,10,menu="Top 100 Audiobooks")
+        self.top_parser(response,0,10)
                 
       
             

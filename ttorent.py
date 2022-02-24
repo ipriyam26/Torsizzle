@@ -1,4 +1,5 @@
 
+
 import requests
 from bs4 import BeautifulSoup
 from simple_term_menu import TerminalMenu
@@ -13,8 +14,11 @@ class OneThreeThreeX:
         self.names = []
         self.links = []
 
-    def add_list(self,response,menu):
-
+    def add_list(self,response):
+        """
+        This funtion gets links and makes names, then zips them into a dictonary returning it
+        to the calling function
+        """
         # print(response.text
         soup = BeautifulSoup(response.text, 'html.parser')
         pkt = soup.select('.icon+ a')
@@ -25,19 +29,27 @@ class OneThreeThreeX:
             self.names.append(f"{pkt[i].text} ({size[i].text})")
             self.links.append(f"{pkt[i].get('href')}")
             i+=1
-        self.selector(menu)    
+        
+        res = dict(zip(self.names, self.links))
+        return  res  
             
             
             
-    def selector(self,menu):
-        terminal_menu = TerminalMenu(self.names,clear_screen=True,title=menu,menu_highlight_style=("bg_red", "fg_yellow"))
-        menu_entry_index = terminal_menu.show()
+    def get_info_hash(self,res,selected):
+        # terminal_menu = TerminalMenu(self.names,clear_screen=True,title=menu,menu_highlight_style=("bg_red", "fg_yellow"))
+        # menu_entry_index = terminal_menu.show()
+        """
+        This function gets the info hash from the selected torrent
+        
+        """
 
-        q=self.links[menu_entry_index]
-
+        q=res.get(selected)
         response = requests.get(f'https://www.1377x.to{q}', headers=self.header)
         soup = BeautifulSoup(response.text,'html.parser') 
-        print(soup.select_one('.infohash-box span').text)
+        return soup.select_one('.infohash-box span').text
+    
+    
+    
     
     def search_parser(self,search):
 
