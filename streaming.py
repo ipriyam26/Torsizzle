@@ -3,7 +3,11 @@
 
 import requests
 import os
-from simple_term_menu import TerminalMenu
+import platform
+if platform.system()=='Windows':
+    from pick import pick
+else:
+    from simple_term_menu import TerminalMenu
 
 
 
@@ -14,6 +18,7 @@ class Torrent:
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0'
             } 
         self.menu = " "
+        self.platform = platform.system()
 
 
     def parser(self,r):
@@ -47,8 +52,12 @@ class Torrent:
             print("Sorry Cannot find what you are searching for :(")
     
     def display_menu(self,options):
-        terminal_menu = TerminalMenu(options,title=self.menu,clear_screen=True,menu_highlight_style=("bg_red", "fg_yellow")) 
-        return terminal_menu.show()
+        if self.platform == 'Windows':
+            option, menu_entry_index = pick(options, self.menu,indicator='>>')
+        else:
+            terminal_menu = TerminalMenu(options,title=self.menu,clear_screen=True,menu_highlight_style=("bg_red", "fg_yellow")) 
+            menu_entry_index = terminal_menu.show()
+        return menu_entry_index
     
     def top_parser(self,r,start,end):
         
