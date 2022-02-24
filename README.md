@@ -38,7 +38,7 @@ Dependencies
 > https://nodejs.org/en/download/
 
 `3. Webtorrent-cli`
-> npm i webtorrent-cli
+> npm i webtorrent-cli -g
 
 
 ### Packages
