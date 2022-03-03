@@ -47,3 +47,5 @@ Dependencies
 `2. requests` 
 
 `3. pick` (for windows only)
+
+## More stuff will be added once I get home as college has a ban on torrents and my vpn is pretty slow to test
