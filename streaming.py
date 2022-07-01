@@ -4,142 +4,71 @@
 import requests
 import os
 import platform
-if platform.system()=='Windows':
-    from pick import pick
-else:
-    from simple_term_menu import TerminalMenu
+
+
+from pick import pick
+
+    
+from sources.one_three_three_x import OneThreeThreeX 
+from sources.piratebay import Piratebay
 
 
 
 class Torrent:
     
-    def __init__(self) -> None:
-        self.headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0'
-            } 
+    def __init__(self):
         self.platform = platform.system()
-
-    def parser(self,r,menu):
-        t =   r.json() if r.status_code==200 else None
-        if(t!=None  ):
-            i=1
-            selected = 0
-            options =[]
-            while i<len(t): 
-                size = float("{:.2f}".format(float(t[i]['size'])/1000000000.0))
-                if int(t[i]['seeders'])>10:
-                    options.append(f" {t[i]['name']}  [{size}GB]")
-                i+=1
-            if len(options)==0:
-                print("Sorry no results found......")
-            options.append("Exit") 
-            options.append("Search Again")
-            
-            if self.platform == 'Windows':
-                option, menu_entry_index = pick(options, menu,indicator='>>')
-            else:
-                terminal_menu = TerminalMenu(options,title=menu,clear_screen=True,menu_highlight_style=("bg_red", "fg_yellow")) 
-                menu_entry_index = terminal_menu.show()
-
-            if(options[menu_entry_index]=="Exit"):
-                exit()
-            elif(options[menu_entry_index]=="Search Again"):
-                self.seach_stream()
-            else:
-                self.stream(menu_entry_index,t)
-                
-
-
-        else:
-            print("Sorry Cannot find what you are searching for :(")
+        self.o33x = OneThreeThreeX()
+        self.pirate = Piratebay()
     
+    def display_menu(self,options:list,menu:str) -> int:
+        return pick(options, menu,indicator='>>')[1]
     
-    def top_parser(self,r,start,end,menu):
-        
-        status = r.status_code
-        t =   r.json() if status==200 else None
-        if(t!=None):
-            i=start
-
-            options =[]
-            while i<end:
-                
-                size = float("{:.2f}".format(float(t[i]['size'])/1000000000.0))
-                options.append(f"{i+1}. {t[i]['name']}  [{size}GB]")
-                i+=1
-            if(start>=10):
-                options.append('Go to Last Page')
-            if(end<100):
-                options.append("Go to Next Page") 
-            options.append("Exit")
-            if self.platform == 'Windows':
-                option, menu_entry_index = pick(options, menu,indicator='>>')
-            else:
-                terminal_menu = TerminalMenu(options,title=menu,clear_screen=True,menu_highlight_style=("bg_red", "fg_yellow")) 
-                menu_entry_index = terminal_menu.show() 
-            
-            
-            if(options[menu_entry_index]=="Go to Next Page"):
-                self.top_parser(r,end,end+10,menu)
-            elif(options[menu_entry_index]=="Go to Last Page"):
-                self.top_parser(r,start-10,start,menu)
-            elif(options[menu_entry_index]=="Exit"):
-                exit()
-            else:
-                self.stream(menu_entry_index+start,t)
-            
-
-            
+    def _extracted_from_stream_10(self,arg0, name,info_hash, command) -> None:
+        print(arg0.format(name))
+        com = command+info_hash
+        os.system(com)
     
-    
-    def stream(self,select,t):
+    def stream(self,name,info_hash) -> None:
         options = ["Stream","Download","Exit"]
-        if self.platform == 'Windows':
-            option, selected = pick(options, f"{t[select]['name']}",indicator='>>')
-        else:
-            terminal_menu = TerminalMenu(options,title=f"{t[select]['name']}",clear_screen=True,menu_highlight_style=("bg_red", "fg_yellow"))
-            selected = terminal_menu.show()
-
+        selected = self.display_menu(options,"Pick one options")
         if selected==0:
-            print("Playing {}......".format(t[select]['name']) )
-            com = 'webtorrent --mpv --quiet ' + t[select]['info_hash']
-            os.system(com) 
+            self._extracted_from_stream_10(
+                "Playing {}......", name, info_hash, 'webtorrent --mpv --quiet '
+            )
         elif selected==1:
-            print("Downloading {}......".format(t[select]['name']) )
-            com = 'webtorrent ' + t[select]['info_hash'] 
-            os.system(com)
+            self._extracted_from_stream_10("Downloading {}......", name, info_hash, 'webtorrent --quiet ')
         else:
             exit()
                
+    def search(self) -> None:
+        search_term:str = input("What would you like to watch today? ")
+        print(search_term)
+        response_from_o33x:dict = self.o33x.search(search_term)
+        response_from_piratebay:dict = self.pirate.search(search_term)
+        total:list = list(response_from_o33x)
+        total.append(list(response_from_piratebay))
+        menu_entry_index: int = self.display_menu(total, f'Search Results for {search_term.replace("|", " ")}')
+
+        info_hash:str =None
+        info_hash = self.pirate.get_info_hash(res = response_from_piratebay,search = total[menu_entry_index])
+        if info_hash is None:
+            info_hash = self.o33x.get_info_hash(res = response_from_o33x,search = total[menu_entry_index])
+        self.stream(name=total[menu_entry_index],info_hash=info_hash)
+
+            
+            
 
         
-        
+    
+    
+    
 
-           #/Users/ipriyam26/Programing/Movies/torsizzle 
-        
-    def seach_stream(self):
-        Movie = input("What would you like to watch today? ")
-        paylode = {'q':Movie}
-        r = requests.get('https://apibay.org/q.php',params=paylode,headers=self.headers)
-        self.parser(r,menu=Movie)
+    
+    
 
-
-
-    def top_movies(self):
-        response = requests.get('https://apibay.org/precompiled/data_top100_201.json',headers=self.headers)
-        self.top_parser(response,0,10,menu="Top 100 Movies")
         
-    def top_series(self):
-        response = requests.get('https://apibay.org/precompiled/data_top100_205.json',headers=self.headers)
-        self.top_parser(response,0,10,menu="Top 100 Series")
-        
-    def top_movies_HD(self):
-        response = requests.get('https://apibay.org/precompiled/data_top100_207.json',headers=self.headers)
-        self.top_parser(response,0,10,menu="Top 100 Movies HD")    
-        
-    def top_audiobooks(self):
-        response = requests.get('https://apibay.org/precompiled/data_top100_102.json',headers=self.headers)
-        self.top_parser(response,0,10,menu="Top 100 Audiobooks")
+    
                 
       
             
