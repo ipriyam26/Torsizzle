@@ -55,15 +55,15 @@ class OneThreeThreeX:
         return self.add_to_dict(response)
         
     
-    def top_movies_HD(self) -> dict:
+    def get_top_movies(self) -> dict:
         response = requests.get('https://www.1377x.to/popular-movies', headers=self.header)
         return self.add_to_dict(response)
     
-    def top_series(self) -> dict:
+    def get_top_series(self) -> dict:
         response = requests.get('https://www.1377x.to/popular-tv', headers=self.header)
         return self.add_to_dict(response)
     
-    def top_anime(self) -> dict:
+    def get_top_anime(self) -> dict:
         response = requests.get('https://www.1377x.to/cat/Anime/1/', headers=self.header)
         return self.add_to_dict(response)
 
