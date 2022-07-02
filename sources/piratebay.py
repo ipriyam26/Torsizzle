@@ -1,3 +1,4 @@
+from pprint import pprint
 import requests
 from typing import Union
 from typing import Any, Dict, List
@@ -26,7 +27,7 @@ class Piratebay:
                 {
                     "name": result["name"],
                     "link": result["info_hash"],
-                    "size": int(result["size"]) / 10**9,
+                    "size": f'{round(int(result["size"]) / 10**9,2)} GB',
                     "seeders": int(result["seeders"]),
                     "source": "piratebay",
                 }
@@ -76,4 +77,4 @@ class Piratebay:
 if __name__ == "__main__":
 
     pp = Piratebay()
-    print(pp.search("Red Notice"))
+    pprint(pp.search("Red Notice"))

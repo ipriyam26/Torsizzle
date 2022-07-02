@@ -1,23 +1,50 @@
 #!./venv/bin/python
 # -*- coding: utf-8 -*-
 
+from pprint import pprint
+from typing import Dict
+from typing import Any, Dict, List
 import requests
 import os
 import platform
 from pick import pick
-
-from sources.piratebay import Piratebay
-from sources.anidex import Anidex
-from sources.glo import Glo
-from sources.torrentz2 import Torrentz2
+from controller import Controller
 
 
 class Torrent:
     def __init__(self):
         self.platform = platform.system()
         # self.o33x = OneThreeThreeX()
-        self.pirate = Piratebay()
+        self.controller = Controller()
+    
+    def beautify_name(self,data:List[Dict[str, Any]])-> List[str]:
+        result:List[str] = []
+        for movies in data:
+            name = f'[{movies["id"]}] - {movies["name"]} [{movies["size"]}]'
+            result.append(name)
+        return result
 
+    def main_menu(self):
+        options = ["Search","Top Series", "Top Movies","Top Anime", "Top Audiobooks", "Exit"]    
+        menu = "Welcome to Torsizzle, Pick one option to continue"
+        selected= self.display_menu(options, menu)
+        if selected == 0:
+            self.search()
+        self.main_menu_selection(selected)
+        
+    def main_menu_selection(self, selected:int):
+        
+        selected_option:Dict[int,function] = {
+            1: self.controller.get_top_series,
+            2: self.controller.get_top_movies,
+            3: self.controller.get_top_anime,
+            4: self.controller.get_top_audiobooks,
+        }
+        data:List[Dict[str, Any]] = selected_option[selected]()
+        result = self.beautify_name(data)
+        print(self.display_menu(result, "Pick one option"))
+    
+    
     def display_menu(self, options: list, menu: str) -> int:
         return pick(options, menu, indicator=">>")[1]
 
@@ -42,21 +69,11 @@ class Torrent:
 
     def search(self) -> None:
         search_term: str = input("What would you like to watch today? ")
-        print(search_term)
-        response_from_o33x: dict = self.o33x.search(search_term)
-        response_from_piratebay: dict = self.pirate.search(search_term)
-        total: list = list(response_from_o33x)
-        total.append(list(response_from_piratebay))
-        menu_entry_index: int = self.display_menu(
-            total, f'Search Results for {search_term.replace("|", " ")}'
-        )
+        data: List[Dict[str, Any]] = self.controller.search(search_term)
+        result = self.beautify_name(data)
+        print(self.display_menu(result, "Pick one option"))
+        # self.stream(name=total[menu_entry_index], info_hash=info_hash)
 
-        info_hash: str = None
-        info_hash = self.pirate.get_info_hash(
-            res=response_from_piratebay, search=total[menu_entry_index]
-        )
-        if info_hash is None:
-            info_hash = self.o33x.get_info_hash(
-                res=response_from_o33x, search=total[menu_entry_index]
-            )
-        self.stream(name=total[menu_entry_index], info_hash=info_hash)
+if __name__ == '__main__':
+    obj = Torrent()
+    obj.main_menu()

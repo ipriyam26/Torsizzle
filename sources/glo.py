@@ -1,5 +1,7 @@
+from pprint import pprint
 from typing import Any, Dict, List
 from unicodedata import name
+from unittest import result
 import requests
 from bs4 import BeautifulSoup
 
@@ -26,6 +28,7 @@ class Glo:
         }
         self.link = "https://gtdb.cc/"
         self.data: List[Dict[str, Any]] = []
+        self.retry = 1
 
     def get_top_series(self):
         params = (
@@ -44,7 +47,6 @@ class Glo:
         try:
             return self._extract_data(response)
         except Exception:
-            print("Doing it again")
             self.get_top_series()
 
     def get_top_movies(self):
@@ -65,6 +67,8 @@ class Glo:
         try:
             return self._extract_data(response)
         except Exception:
+            if self.retry ==5:
+                return self.data
             self.get_top_movies()
 
     def get_top_anime(self):
@@ -84,6 +88,8 @@ class Glo:
         try:
             return self._extract_data(response)
         except Exception:
+            if self.retry ==5:
+                return self.data
             self.get_top_anime()
 
     def search(self, search: str) -> List[Dict[str, Any]]:
@@ -103,9 +109,13 @@ class Glo:
         try:
             return self._extract_data(response)
         except Exception:
+            if self.retry ==5:
+                return self.data
             self.search(search)
 
     def _extract_data(self, response):
+        self.retry += 1
+        print("Doing it again")
         soup = BeautifulSoup(response.text, "html.parser")
         names = soup.select(".ttable_col2 a+ a b")
         sizes = soup.select(".ttable_col1:nth-child(5)")
@@ -122,10 +132,9 @@ class Glo:
                     "source": "glo",
                 }
             )
-
         return self.data
 
 
 if __name__ == "__main__":
     obj = Glo()
-    obj.search("Game of Thrones")
+    pprint(obj.search("Game of Thrones"))

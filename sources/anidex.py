@@ -1,4 +1,5 @@
 from os import link
+from pprint import pprint
 from typing import Any, Dict, List
 import requests
 from bs4 import BeautifulSoup
@@ -80,4 +81,4 @@ if __name__ == "__main__":
     ani = Anidex()
     # ani.search('Naruto')
     # ani.get_info_hash()
-    print(ani.get_top_anime())
+    pprint(ani.get_top_anime())

@@ -18,6 +18,8 @@ class Controller:
 
     def _helper(self, results: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         results = sorted(results, key=lambda x: x["seeders"], reverse=True)
+        for id in range(len(results)):
+            results[id]["id"] = id
         self.total_pages = len(results) // 20 + 1
         self.result = results
         self.page += 1
