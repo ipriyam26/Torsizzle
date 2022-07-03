@@ -45,12 +45,14 @@ class OneThreeThreeX:
         so we should check each one of them and return the info hash if present else just return None
         and check at call to see if this was the correct method
         """
-        print("one three three x")
+
         response = requests.get(link, headers=self.header,timeout=self.threshold)
         soup = BeautifulSoup(response.text, "html.parser")
         magnet = soup.select_one(".l0d669aa8b23687a65b2981747a14a1be1174ba2c").get("href")
         import re
         return re.findall(r"btih:(.*?)&", magnet)[0]
+
+        
     def search(self, search: str) -> dict:
         params = (
             ("limit", "1"),

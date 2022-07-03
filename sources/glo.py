@@ -28,7 +28,7 @@ class Glo:
         }
         self.link = "https://gtdb.cc/"
         self.data: List[Dict[str, Any]] = []
-        self.retry = 1
+        self.retry = 5
 
     def get_info_hash(self, link: str) -> str:
         import re
@@ -44,14 +44,8 @@ class Glo:
             ("sort", "seeders"),
             ("order", "desc"),
         )
+        return self._extract_data(params)
 
-        response = requests.get(
-            f"{self.link}search_results.php", headers=self.headers, params=params
-        )
-        try:
-            return self._extract_data(response)
-        except Exception:
-            self.get_top_series()
 
     def get_top_movies(self):
         params = (
@@ -63,17 +57,8 @@ class Glo:
             ("sort", "seeders"),
             ("order", "desc"),
         )
+        return self._extract_data(params)
 
-        response = requests.get(
-            f"{self.link}search_results.php", headers=self.headers, params=params,
-        )
-
-        try:
-            return self._extract_data(response)
-        except Exception:
-            if self.retry ==5:
-                return self.data
-            self.get_top_movies()
 
     def get_top_anime(self):
         params = (
@@ -85,16 +70,8 @@ class Glo:
             ("sort", "seeders"),
             ("order", "desc"),
         )
+        return self._extract_data(params)
 
-        response = requests.get(
-            f"{self.link}search_results.php", headers=self.headers, params=params
-        )
-        try:
-            return self._extract_data(response)
-        except Exception:
-            if self.retry ==5:
-                return self.data
-            self.get_top_anime()
 
     def search(self, search: str) -> List[Dict[str, Any]]:
         params = (
@@ -106,20 +83,24 @@ class Glo:
             ("sort", "seeders"),
             ("order", "desc"),
         )
+        return self._extract_data(params)
 
+
+    def _extract_data(self, params):
+        
         response = requests.get(
             f"{self.link}search_results.php", headers=self.headers, params=params
         )
-        try:
-            return self._extract_data(response)
-        except Exception:
-            if self.retry ==5:
-                return self.data
-            self.search(search)
-
-    def _extract_data(self, response):
-        self.retry += 1
-        print("Doing it again")
+        
+        for _ in range(self.retry):
+            try:
+                response = requests.get(
+                f"{self.link}search_results.php", headers=self.headers, params=params
+            )
+            except Exception:
+                response = requests.get(
+                f"{self.link}search_results.php", headers=self.headers, params=params
+            )
         soup = BeautifulSoup(response.text, "html.parser")
         names = soup.select(".ttable_col2 a+ a b")
         sizes = soup.select(".ttable_col1:nth-child(5)")
@@ -132,7 +113,7 @@ class Glo:
                     "name": names[i].text,
                     "link": f"{self.link}{links[i].get('href')}",
                     "size": sizes[i].text,
-                    "seeders": int(seeders[i].text),
+                    "seeders": int(seeders[i].text.replace(",", "")),
                     "source": "glo",
                 }
             )
