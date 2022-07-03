@@ -9,19 +9,14 @@ Search, Browse, Stream, Download movies webseries audiobooks.... faster than eve
 PS: You can download anything torrent lets you
 
 ### Use
->python3 main.py
+>python3 streaming.py
 
 ## Setup
 
 > git clone https://github.com/ipriyam26/Torsizzle.git && cd Torsizzle
 
-### For Windows users
->pip install windows-curses
 
->python3 setup.py
-
-
-### For mac users
+### For mac and windows users
 >python3 setup.py
 
 ### For linix users install these Dependencies then run
@@ -42,10 +37,15 @@ Dependencies
 
 
 ### Packages
-`1. simple_term_menu` (for mac and linux)
+`1. pick` 
 
 `2. requests` 
 
-`3. pick` (for windows only)
+`3. bs4` 
 
-## More stuff will be added once I get home as college has a ban on torrents and my vpn is pretty slow to test
+### Config
+`Currently we support 5 torrent sites, but I have disabled 1377x by default you can open config.json and turn it to true if it works in your area`
+
+`Will make this all automatic soon`
+
+
