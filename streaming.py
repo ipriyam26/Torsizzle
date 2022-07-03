@@ -21,9 +21,10 @@ class Torrent:
         options = ["Search","Top Series", "Top Movies","Top Anime", "Top Audiobooks", "Exit"]    
         menu = "Welcome to Torsizzle, Pick one option to continue"
         selected= self.display_menu(options, menu)
+        print("Please wait while we are loading your data...")
         self.logic(selected)
 
-    def main_menu_selection(self, selected_option:function):
+    def main_menu_selection(self, selected_option):
         data:List[Dict[str, Any]] = selected_option()
         self._helper_controller(data)
     
@@ -79,7 +80,8 @@ class Torrent:
             pprint(data)
         result:List[str] = []
         for movies in data:
-            name = f'[{movies["id"]}] - {movies["source"]} {movies["name"]} [{movies["size"]}]'
+            space = "" if movies["id"]>9 else " "
+            name = f'[{movies["id"]}]{space} - {str(movies["name"]).replace("."," ").replace("  "," ")} [{movies["size"]}] {movies["source"]}'
             result.append(name)
         return result
     
@@ -87,7 +89,7 @@ class Torrent:
         result = self.beautify_name(data)
         selected_2 = self.display_menu(result, "Pick one option")
         info_hash = self.controller.get_info_hash(data[selected_2])
-        self.stream(name=data[selected_2]["name"], info_hash=info_hash)
+        self.stream(name=str(data[selected_2]["name"]).replace("."," ").replace("  "," "), info_hash=info_hash)
         
     def _player(self, arg0, name, info_hash, command) -> None:
         print(arg0.format(name))

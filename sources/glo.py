@@ -32,6 +32,7 @@ class Glo:
 
     def get_info_hash(self, link: str) -> str:
         import re
+        print(link)
         return re.findall(r"btih:(.*?)&", link)[0]
 
     def get_top_series(self):
@@ -108,6 +109,8 @@ class Glo:
         links = soup.select(".ttable_col2~ .ttable_col2 a")
 
         for i in range(len(names)):
+            if "btih" not in links[i].get('href'):
+                continue
             self.data.append(
                 {
                     "name": names[i].text,
@@ -122,4 +125,5 @@ class Glo:
 
 if __name__ == "__main__":
     obj = Glo()
-    pprint(obj.get_top_movies())
+    pprint(obj.get_top_series())
+
