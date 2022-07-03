@@ -1,77 +1,100 @@
 #!./venv/bin/python
 # -*- coding: utf-8 -*-
 
-import requests
+from pprint import pprint
+from typing import Dict
+from typing import Any, Dict, List
 import os
 import platform
-
-
 from pick import pick
-
-    
-from sources.one_three_three_x import OneThreeThreeX 
-from sources.piratebay import Piratebay
-
+from controller import Controller
 
 
 class Torrent:
-    
     def __init__(self):
         self.platform = platform.system()
-        self.o33x = OneThreeThreeX()
-        self.pirate = Piratebay()
+        self.controller = Controller()
+        self.debug = False
     
-    def display_menu(self,options:list,menu:str) -> int:
-        return pick(options, menu,indicator='>>')[1]
+
+    def main_menu(self):
+        options = ["Search","Top Series", "Top Movies","Top Anime", "Top Audiobooks", "Exit"]    
+        menu = "Welcome to Torsizzle, Pick one option to continue"
+        selected= self.display_menu(options, menu)
+        self.logic(selected)
+
+    def main_menu_selection(self, selected_option:function):
+        data:List[Dict[str, Any]] = selected_option()
+        self._helper_controller(data)
     
-    def _extracted_from_stream_10(self,arg0, name,info_hash, command) -> None:
-        print(arg0.format(name))
-        com = command+info_hash
-        os.system(com)
     
-    def stream(self,name,info_hash) -> None:
-        options = ["Stream","Download","Exit"]
-        selected = self.display_menu(options,"Pick one options")
-        if selected==0:
-            self._extracted_from_stream_10(
-                "Playing {}......", name, info_hash, 'webtorrent --mpv --quiet '
+    def display_menu(self, options: list, menu: str) -> int:
+        os.system("clear")
+        return pick(options, menu, indicator=">>")[1]
+
+
+    def stream(self, name, info_hash) -> None:
+        options = ["Stream", "Download", "Exit"]
+        selected = self.display_menu(options, "Pick one options")
+        self.logic2(name, info_hash, selected) 
+
+
+    def search_menu(self) -> None:
+        search_term: str = input("What would you like to watch today? ")
+        data: List[Dict[str, Any]] = self.controller.search(search_term)
+        self._helper_controller(data)
+        
+    def quit(self) -> None:
+        os.system("clear")
+        print("Thanks for using Torsizzle!, See you soon!")    
+        exit()
+        
+    def logic(self, selected):
+        if selected == 0:
+            self.search_menu()
+        elif selected == 5:
+            self.quit() 
+        selected_option:Dict[int,function] = {
+            1: self.controller.get_top_series,
+            2: self.controller.get_top_movies,
+            3: self.controller.get_top_anime,
+            4: self.controller.get_top_audiobooks,
+        }
+        self.main_menu_selection(selected_option[selected])
+        
+    def logic2(self, name, info_hash, selected):
+        if selected == 0:
+            self._player(
+                "Playing {}......", name, info_hash, "webtorrent --mpv --quiet "
             )
-        elif selected==1:
-            self._extracted_from_stream_10("Downloading {}......", name, info_hash, 'webtorrent --quiet ')
+        elif selected == 1:
+            self._player(
+                "Downloading {}......", name, info_hash, "webtorrent --quiet "
+            )
         else:
-            exit()
-               
-    def search(self) -> None:
-        search_term:str = input("What would you like to watch today? ")
-        print(search_term)
-        response_from_o33x:dict = self.o33x.search(search_term)
-        response_from_piratebay:dict = self.pirate.search(search_term)
-        total:list = list(response_from_o33x)
-        total.append(list(response_from_piratebay))
-        menu_entry_index: int = self.display_menu(total, f'Search Results for {search_term.replace("|", " ")}')
+            self.quit()
 
-        info_hash:str =None
-        info_hash = self.pirate.get_info_hash(res = response_from_piratebay,search = total[menu_entry_index])
-        if info_hash is None:
-            info_hash = self.o33x.get_info_hash(res = response_from_o33x,search = total[menu_entry_index])
-        self.stream(name=total[menu_entry_index],info_hash=info_hash)
-
-            
-            
-
+    def beautify_name(self,data:List[Dict[str, Any]])-> List[str]:
+        if self.debug:
+            pprint(data)
+        result:List[str] = []
+        for movies in data:
+            name = f'[{movies["id"]}] - {movies["source"]} {movies["name"]} [{movies["size"]}]'
+            result.append(name)
+        return result
+    
+    def _helper_controller(self, data):
+        result = self.beautify_name(data)
+        selected_2 = self.display_menu(result, "Pick one option")
+        info_hash = self.controller.get_info_hash(data[selected_2])
+        self.stream(name=data[selected_2]["name"], info_hash=info_hash)
         
-    
-    
-    
-
-    
-    
-
-        
-    
-                
-      
-            
+    def _player(self, arg0, name, info_hash, command) -> None:
+        print(arg0.format(name))
+        com = command + info_hash
+        os.system(com)
         
 
-
+if __name__ == '__main__':
+    obj = Torrent()
+    obj.main_menu()
