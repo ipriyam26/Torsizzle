@@ -14,13 +14,15 @@ from controller import Controller
 class Torrent:
     def __init__(self):
         self.platform = platform.system()
-        # self.o33x = OneThreeThreeX()
         self.controller = Controller()
+        self.debug = False
     
     def beautify_name(self,data:List[Dict[str, Any]])-> List[str]:
+        if self.debug:
+            pprint(data)
         result:List[str] = []
         for movies in data:
-            name = f'[{movies["id"]}] - {movies["name"]} [{movies["size"]}]'
+            name = f'[{movies["id"]}] - {movies["source"]} {movies["name"]} [{movies["size"]}]'
             result.append(name)
         return result
 
@@ -29,11 +31,13 @@ class Torrent:
         menu = "Welcome to Torsizzle, Pick one option to continue"
         selected= self.display_menu(options, menu)
         if selected == 0:
-            self.search()
+            self.search_menu()
+        elif selected == 5:
+            print("Thanks for using Torsizzle!, See you soon!")
+            exit()
         self.main_menu_selection(selected)
         
     def main_menu_selection(self, selected:int):
-        
         selected_option:Dict[int,function] = {
             1: self.controller.get_top_series,
             2: self.controller.get_top_movies,
@@ -41,8 +45,14 @@ class Torrent:
             4: self.controller.get_top_audiobooks,
         }
         data:List[Dict[str, Any]] = selected_option[selected]()
+        self._helper_controller(data)
+
+    def _helper_controller(self, data):
         result = self.beautify_name(data)
-        print(self.display_menu(result, "Pick one option"))
+        selected_2 = self.display_menu(result, "Pick one option")
+        info_hash = self.controller.get_info_hash(data[selected_2])
+        self.stream(name=data[selected_2]["name"], info_hash=info_hash)
+        
     
     
     def display_menu(self, options: list, menu: str) -> int:
@@ -67,12 +77,10 @@ class Torrent:
         else:
             exit()
 
-    def search(self) -> None:
+    def search_menu(self) -> None:
         search_term: str = input("What would you like to watch today? ")
         data: List[Dict[str, Any]] = self.controller.search(search_term)
-        result = self.beautify_name(data)
-        print(self.display_menu(result, "Pick one option"))
-        # self.stream(name=total[menu_entry_index], info_hash=info_hash)
+        self._helper_controller(data)
 
 if __name__ == '__main__':
     obj = Torrent()

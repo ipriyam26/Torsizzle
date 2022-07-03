@@ -11,6 +11,9 @@ class Piratebay:
         }
         self.link = "https://apibay.org/"
         self.data: List[Dict[str, Any]] = []
+    
+    def get_info_hash(self,link) -> str:
+        return link
 
     def _extract_data(self, response) -> List[Dict[str, Any]]:
         """

@@ -30,6 +30,10 @@ class Glo:
         self.data: List[Dict[str, Any]] = []
         self.retry = 1
 
+    def get_info_hash(self, link: str) -> str:
+        import re
+        return re.findall(r"btih:(.*?)&", link)[0]
+
     def get_top_series(self):
         params = (
             ("search", ""),
@@ -61,7 +65,7 @@ class Glo:
         )
 
         response = requests.get(
-            f"{self.link}search_results.php", headers=self.headers, params=params
+            f"{self.link}search_results.php", headers=self.headers, params=params,
         )
 
         try:
@@ -137,4 +141,4 @@ class Glo:
 
 if __name__ == "__main__":
     obj = Glo()
-    pprint(obj.search("Game of Thrones"))
+    pprint(obj.get_top_movies())

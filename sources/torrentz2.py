@@ -26,6 +26,10 @@ class Torrentz2:
         }
         self.data: List[Dict[str, Any]] = []
 
+    def get_info_hash(self, link: str) -> str:
+        import re
+        return re.findall(r"btih:(.*?)&", link)[0]
+        
     def search(self, search):
         params = (("q", search),)
         response = requests.get(

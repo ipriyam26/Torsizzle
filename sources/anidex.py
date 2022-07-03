@@ -29,13 +29,13 @@ class Anidex:
         self.link = "https://anidex.info"
         self.data: List[Dict[str, Any]] = []
 
-    def get_info_hash(self):
-        for anime in self.data:
+    def get_info_hash(self, link: str):
             response = requests.get(
-                f"{self.link}{anime.get('link')}", headers=self.headers
+                f"{self.link}{link}", headers=self.headers
             )
             soup = BeautifulSoup(response.text, "html.parser")
-            print(soup.select("kbd")[0].text)
+            return soup.select("kbd")[0].text 
+
 
     def get_top_anime(self):
         params = (
@@ -56,7 +56,7 @@ class Anidex:
         response = requests.get(self.link, headers=self.headers, params=paylode)
         return self._extract_data(response=response)
 
-    def _extract_data(self, response: requests.Response):
+    def _extract_data(self, response: requests.Response)-> List[Dict[str, Any]]:
         soup = BeautifulSoup(response.text, "html.parser")
         names = soup.select(".span-1440")
         llp = soup.select(".text-left+ td")
