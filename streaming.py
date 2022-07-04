@@ -18,7 +18,15 @@ class Torrent:
     
 
     def main_menu(self):
-        options = ["Search","Top Series", "Top Movies","Top Anime", "Top Audiobooks", "Exit"]    
+        options = [
+        "[1] Search",
+        "[2] Top Movies",
+        "[3] Top HD Movies",
+        "[4] Top Series",
+        "[5] Top Audiobooks",
+        "[6] Exit",
+    ]
+            
         menu = "Welcome to Torsizzle, Pick one option to continue"
         selected= self.display_menu(options, menu)
         print("Please wait while we are loading your data...")

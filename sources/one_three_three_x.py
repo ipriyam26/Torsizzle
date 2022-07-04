@@ -3,6 +3,7 @@ from typing import Any, Dict, List
 import requests
 from bs4 import BeautifulSoup
 import urllib.parse
+from config import Config, get_config
 
 
 class OneThreeThreeX:
@@ -14,7 +15,28 @@ class OneThreeThreeX:
         self.data = []
         self.threshold = 5
 
+        
 
+    def is_up(self) ->bool :
+        up = False
+        try:
+            response = requests.get(
+                "https://www.1377x.to/", headers=self.header,timeout=self.threshold
+            )
+            up =  response.status_code == 200
+        except Exception:
+            up= False
+        
+        if not up:
+            config = get_config()
+            config.change_source(source="1377x", value=False)
+            return False
+        return True
+        
+
+            
+        
+        
     def _extract_data(self, response: requests.Response) ->  List[Dict[str, Any]]:
         """
         This funtion gets links and makes names, then zips them into a dictonary returning it
@@ -67,7 +89,7 @@ class OneThreeThreeX:
         # proxies = {"http": response.text, "https": response.text}
         q = urllib.parse.quote(search)
         response = requests.get(
-            f"https://www.1377x.to/search/{q}/1", headers=self.header,timeout=self.threshold
+            f"https://www.1377x.to/search/{q}/1", headers=self.header,timeout=self.threshold,params=params
             # proxies=proxies
         )
         # print(response.text)
