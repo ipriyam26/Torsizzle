@@ -18,12 +18,21 @@ class Torrent:
     
 
     def main_menu(self):
-        options = ["Search","Top Series", "Top Movies","Top Anime", "Top Audiobooks", "Exit"]    
+        options = [
+        "[1] Search",
+        "[2] Top Movies",
+        "[3] Top HD Movies",
+        "[4] Top Series",
+        "[5] Top Audiobooks",
+        "[6] Exit",
+    ]
+            
         menu = "Welcome to Torsizzle, Pick one option to continue"
         selected= self.display_menu(options, menu)
-        self.logic(selected)
+        print("Please wait while we are loading your data...")
+        self.main_menu_logic(selected)
 
-    def main_menu_selection(self, selected_option:function):
+    def main_menu_selection(self, selected_option):
         data:List[Dict[str, Any]] = selected_option()
         self._helper_controller(data)
     
@@ -36,7 +45,7 @@ class Torrent:
     def stream(self, name, info_hash) -> None:
         options = ["Stream", "Download", "Exit"]
         selected = self.display_menu(options, "Pick one options")
-        self.logic2(name, info_hash, selected) 
+        self.main_menu_logic2(name, info_hash, selected) 
 
 
     def search_menu(self) -> None:
@@ -49,7 +58,7 @@ class Torrent:
         print("Thanks for using Torsizzle!, See you soon!")    
         exit()
         
-    def logic(self, selected):
+    def main_menu_logic(self, selected):
         if selected == 0:
             self.search_menu()
         elif selected == 5:
@@ -62,7 +71,7 @@ class Torrent:
         }
         self.main_menu_selection(selected_option[selected])
         
-    def logic2(self, name, info_hash, selected):
+    def main_menu_logic2(self, name, info_hash, selected):
         if selected == 0:
             self._player(
                 "Playing {}......", name, info_hash, "webtorrent --mpv --quiet "
@@ -79,7 +88,8 @@ class Torrent:
             pprint(data)
         result:List[str] = []
         for movies in data:
-            name = f'[{movies["id"]}] - {movies["source"]} {movies["name"]} [{movies["size"]}]'
+            space = "" if movies["id"]>9 else " "
+            name = f'[{movies["id"]}]{space} - {str(movies["name"]).replace("."," ").replace("  "," ")} [{movies["size"]}] {movies["source"]}'
             result.append(name)
         return result
     
@@ -87,7 +97,7 @@ class Torrent:
         result = self.beautify_name(data)
         selected_2 = self.display_menu(result, "Pick one option")
         info_hash = self.controller.get_info_hash(data[selected_2])
-        self.stream(name=data[selected_2]["name"], info_hash=info_hash)
+        self.stream(name=str(data[selected_2]["name"]).replace("."," ").replace("  "," "), info_hash=info_hash)
         
     def _player(self, arg0, name, info_hash, command) -> None:
         print(arg0.format(name))

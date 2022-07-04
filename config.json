@@ -1,10 +1,9 @@
 {
-    "sources":{
-        "1377x" : false,
-        "anidex" : true,
+    "sources": {
+        "1377x": true,
+        "anidex": true,
         "glo": true,
-        "piratebay" : true,
-        "torrentz2" : true
+        "piratebay": true,
+        "torrentz2": true
     }
-
 }

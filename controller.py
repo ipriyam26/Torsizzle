@@ -18,11 +18,16 @@ class Controller:
     
     def _initialize_sources(self) -> None:
         sources = self.config.sources
+
         self.piratebay = Piratebay() if sources.piratebay else Base()
         self.anidex = Anidex() if sources.anidex else Base()
         self.glo = Glo() if sources.glo else Base()
         self.torrentz2 = Torrentz2() if sources.torrentz2 else Base()
         self.the_1377x = OneThreeThreeX() if sources.the_1377x else Base()
+        if isinstance(self.the_1377x, OneThreeThreeX) and not self.the_1377x.is_up():
+            self.the_1377x = Base()
+                
+        
 
     def _helper(self, results: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         results = sorted(results, key=lambda x: x["seeders"], reverse=True)
@@ -35,6 +40,8 @@ class Controller:
     
     def get_info_hash(self,object:Dict[str, Any]) -> str:
         source:str = object["source"]
+
+        
         info_hash:Dict[str,function] = {
             "piratebay": self.piratebay.get_info_hash,
             "anidex": self.anidex.get_info_hash,
