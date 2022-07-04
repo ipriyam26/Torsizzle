@@ -35,6 +35,8 @@ class Controller:
     
     def get_info_hash(self,object:Dict[str, Any]) -> str:
         source:str = object["source"]
+
+        
         info_hash:Dict[str,function] = {
             "piratebay": self.piratebay.get_info_hash,
             "anidex": self.anidex.get_info_hash,

@@ -32,7 +32,6 @@ class Glo:
 
     def get_info_hash(self, link: str) -> str:
         import re
-        print(link)
         return re.findall(r"btih:(.*?)&", link)[0]
 
     def get_top_series(self):
@@ -107,14 +106,12 @@ class Glo:
         sizes = soup.select(".ttable_col1:nth-child(5)")
         seeders = soup.select(".ttable_col2 font b")
         links = soup.select(".ttable_col2~ .ttable_col2 a")
-
+        links = [link.get("href") for link in links if "magnet" in link.get("href")]
         for i in range(len(names)):
-            if "btih" not in links[i].get('href'):
-                continue
             self.data.append(
                 {
                     "name": names[i].text,
-                    "link": f"{self.link}{links[i].get('href')}",
+                    "link": f"{self.link}{links[i]}",
                     "size": sizes[i].text,
                     "seeders": int(seeders[i].text.replace(",", "")),
                     "source": "glo",
@@ -125,5 +122,5 @@ class Glo:
 
 if __name__ == "__main__":
     obj = Glo()
-    pprint(obj.get_top_series())
+    obj.get_top_series()
 

@@ -22,7 +22,7 @@ class Torrent:
         menu = "Welcome to Torsizzle, Pick one option to continue"
         selected= self.display_menu(options, menu)
         print("Please wait while we are loading your data...")
-        self.logic(selected)
+        self.main_menu_logic(selected)
 
     def main_menu_selection(self, selected_option):
         data:List[Dict[str, Any]] = selected_option()
@@ -37,7 +37,7 @@ class Torrent:
     def stream(self, name, info_hash) -> None:
         options = ["Stream", "Download", "Exit"]
         selected = self.display_menu(options, "Pick one options")
-        self.logic2(name, info_hash, selected) 
+        self.main_menu_logic2(name, info_hash, selected) 
 
 
     def search_menu(self) -> None:
@@ -50,7 +50,7 @@ class Torrent:
         print("Thanks for using Torsizzle!, See you soon!")    
         exit()
         
-    def logic(self, selected):
+    def main_menu_logic(self, selected):
         if selected == 0:
             self.search_menu()
         elif selected == 5:
@@ -63,7 +63,7 @@ class Torrent:
         }
         self.main_menu_selection(selected_option[selected])
         
-    def logic2(self, name, info_hash, selected):
+    def main_menu_logic2(self, name, info_hash, selected):
         if selected == 0:
             self._player(
                 "Playing {}......", name, info_hash, "webtorrent --mpv --quiet "
