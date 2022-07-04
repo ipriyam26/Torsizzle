@@ -1,0 +1,15 @@
+beautifulsoup4==4.10.0
+bs4==0.0.1
+certifi==2021.10.8
+cffi==1.15.0
+charset-normalizer==2.0.12
+cryptography==36.0.1
+idna==3.3
+ndg-httpsclient==0.5.1
+pick==1.2.0
+pyasn1==0.4.8
+pycparser==2.21
+pyOpenSSL==22.0.0
+requests==2.27.1
+soupsieve==2.3.1
+urllib3==1.26.8
