@@ -43,9 +43,8 @@ Dependencies
 
 `3. bs4` 
 
-### Config
-`Currently we support 5 torrent sites, but I have disabled 1377x by default you can open config.json and turn it to true if it works in your area`
+### Working on a GUI for people who don't understand programs, + gonna add more sources, open for help.
 
-`Will make this all automatic soon`
+
 
 
