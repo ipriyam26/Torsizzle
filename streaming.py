@@ -20,9 +20,9 @@ class Torrent:
     def main_menu(self):
         options = [
         "[1] Search",
-        "[2] Top Movies",
-        "[3] Top HD Movies",
-        "[4] Top Series",
+        "[2] Top Series",
+        "[3] Top Movies",
+        "[4] Top Anime",
         "[5] Top Audiobooks",
         "[6] Exit",
     ]
@@ -78,7 +78,7 @@ class Torrent:
             )
         elif selected == 1:
             self._player(
-                "Downloading {}......", name, info_hash, "webtorrent --quiet "
+                "Downloading {}......", name, info_hash, "webtorrent "
             )
         else:
             self.quit()
